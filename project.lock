@@ -1,0 +1,103 @@
+split:
+  cmd: python -m spacy run split
+  script:
+    - python scripts/split_data.py assets/features.csv assets/train.json assets/val.json
+  deps:
+    - path: assets/features.csv
+      md5: 3d58aff7be7311f30e70a884b325c1b9
+    - path: scripts/split_data.py
+      md5: 9738f1272364e04a6f9dd6368cbcedfe
+  outs:
+    - path: assets/train.json
+      md5: 3a307e7d1db08ec91b2468c7182222b6
+    - path: assets/val.json
+      md5: ccecc82cc35a1577aef1291a7963b53f
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
+convert:
+  cmd: python -m spacy run convert
+  script:
+    - python scripts/convert.py es assets/train.json corpus/train.spacy
+    - python scripts/convert.py es assets/val.json corpus/val.spacy
+  deps:
+    - path: assets/train.json
+      md5: 3a307e7d1db08ec91b2468c7182222b6
+    - path: assets/val.json
+      md5: ccecc82cc35a1577aef1291a7963b53f
+    - path: scripts/convert.py
+      md5: 225ba70044cf8d56247afeacdc6aa38e
+  outs:
+    - path: corpus/train.spacy
+      md5: 8213a1482cfc9f07ea58a9c25d14c920
+    - path: corpus/val.spacy
+      md5: 7795090d982a725b7ada3e2f5d8e66a7
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
+setup:
+  cmd: python -m spacy run setup
+  script:
+    - python setup.py
+  deps:
+    - path: setup.py
+      md5: dc76a8513161224a98b17dae1e1f74a1
+  outs: []
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
+create-config:
+  cmd: python -m spacy run create-config
+  script:
+    - python -m spacy init fill-config configs/base_config.cfg configs/config.cfg
+  deps:
+    - path: configs/base_config.cfg
+      md5: de0794cf2e6db5358df82f98ae20c458
+  outs:
+    - path: configs/config.cfg
+      md5: 313dd342e663f5922e262296c51ba497
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
+train:
+  cmd: python -m spacy run train
+  script:
+    - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
+      --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
+      100 --training.patience 50 --gpu-id 0
+  deps:
+    - path: configs/config.cfg
+      md5: 313dd342e663f5922e262296c51ba497
+    - path: assets/train.json
+      md5: 3a307e7d1db08ec91b2468c7182222b6
+    - path: assets/val.json
+      md5: ccecc82cc35a1577aef1291a7963b53f
+  outs:
+    - path: out/model
+      md5: null
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
+evaluate:
+  cmd: python -m spacy run evaluate
+  script:
+    - python -m spacy evaluate out/model-best corpus/val.spacy --output out/metrics.json
+      --gpu-id 0
+  deps:
+    - path: out/model-best
+      md5: a5447e93629cae595f76286fd202d3c8
+    - path: assets/val.json
+      md5: ccecc82cc35a1577aef1291a7963b53f
+  outs:
+    - path: out/metrics.json
+      md5: 22b81e3e169ea2560373498860addce8
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
+package:
+  cmd: python -m spacy run package
+  script:
+    - python -m spacy package out/model-best packages --name yoda_ner --version 0.0.1
+      --force
+  deps:
+    - path: out/model-best
+      md5: a5447e93629cae595f76286fd202d3c8
+  outs:
+    - path: packages/es_yoda_ner-0.0.1/dist/es_yoda_ner-0.0.1.tar.gz
+      md5: e3da2aa580f46803d535040daf0b6ca9
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
