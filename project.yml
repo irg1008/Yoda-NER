@@ -6,7 +6,7 @@ spacy_version: "3.4.0"
 vars:
   name: "yoda_ner"
   lang: "es"
-  pipeline: "es_core_news_lg"
+  pipeline: "es_dep_news_trf"
 
   # Custom data
   data: "assets/features.csv"
@@ -35,7 +35,7 @@ vars:
 
   # Metrics
   metrics: "out/metrics.json"
-  view_example: "Chaqueta Salomon DrifterLoft Hoodie Hombre M Azul/Verde"
+  view_example: "Chaqueta Salomon DrifterLoft Hoodie Hombre M Azul y Verde"
 
   version: "0.0.1"
   # Set your GPU ID, -1 is CPU

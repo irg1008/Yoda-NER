@@ -5,14 +5,14 @@ split:
       0.7
   deps:
     - path: assets/features.csv
-      md5: c35b51d3ce9bb918f2e28909abfa66f5
+      md5: 8de99cd14acb8539a682f56a6f14a392
     - path: scripts/split_data.py
       md5: b8915ce8dfcf5b10bf145291cd131a23
   outs:
     - path: assets/train.json
-      md5: d5b5b1f8cbcf7091f3d342324dce9d1c
+      md5: e3d2ee9d53d9b07d71a91a5a34332d48
     - path: assets/val.json
-      md5: 4529a04b7b46ac4f1107d0713078c923
+      md5: da4cb1b6547783672d0847411045fd22
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 convert:
@@ -22,16 +22,16 @@ convert:
     - python scripts/convert.py es assets/val.json corpus/val.spacy
   deps:
     - path: assets/train.json
-      md5: d5b5b1f8cbcf7091f3d342324dce9d1c
+      md5: e3d2ee9d53d9b07d71a91a5a34332d48
     - path: assets/val.json
-      md5: 4529a04b7b46ac4f1107d0713078c923
+      md5: da4cb1b6547783672d0847411045fd22
     - path: scripts/convert.py
       md5: 225ba70044cf8d56247afeacdc6aa38e
   outs:
     - path: corpus/train.spacy
-      md5: 596ebffbee84f4c047d9eb032e8710ee
+      md5: fa29d34e1c914807a9e69af916ffd378
     - path: corpus/val.spacy
-      md5: cb89613c1f72dead0ef46d9dba5b55ee
+      md5: 466d05303c8f41b1936f2d825d96046f
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 setup:
@@ -61,17 +61,17 @@ train:
   script:
     - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
       --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
-      300 --training.patience 50 --gpu-id 0
+      1000 --training.patience 50 --gpu-id 0
   deps:
     - path: configs/config.cfg
       md5: f1079607b6f50bc4820605e9cc3b83ed
     - path: assets/train.json
-      md5: d5b5b1f8cbcf7091f3d342324dce9d1c
+      md5: e3d2ee9d53d9b07d71a91a5a34332d48
     - path: assets/val.json
-      md5: 4529a04b7b46ac4f1107d0713078c923
+      md5: da4cb1b6547783672d0847411045fd22
   outs:
     - path: out/model-best
-      md5: 5930dfa74f35e2316a685e20474ab779
+      md5: e3c29503be09d68550fb8f766f53e0c8
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:
