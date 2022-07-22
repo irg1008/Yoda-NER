@@ -39,7 +39,7 @@ vars:
 
   version: "0.0.1"
   # Set your GPU ID, -1 is CPU
-  gpu_id: 0
+  gpu_id: -1
 
 directories: ["assets", "corpus", "configs", "scripts", "notebooks"]
 
