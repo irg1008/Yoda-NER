@@ -50,10 +50,10 @@ create-config:
     - python -m spacy init fill-config configs/base_config.cfg configs/config.cfg
   deps:
     - path: configs/base_config.cfg
-      md5: d01392e49a6f6d5802e4d3a35d6cbbfa
+      md5: ebae7a6bbdfbdaf96354ff542d562d5e
   outs:
     - path: configs/config.cfg
-      md5: f1079607b6f50bc4820605e9cc3b83ed
+      md5: 1c5164a2bd1bd779f812ab8a3fc6247f
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 train:
@@ -64,14 +64,14 @@ train:
       1000 --training.patience 50 --gpu-id 0
   deps:
     - path: configs/config.cfg
-      md5: f1079607b6f50bc4820605e9cc3b83ed
+      md5: 03cdb8463a93022d7f718a016fa00496
     - path: assets/train.json
       md5: 562f0d9c1785bb636e0d91009679a5dd
     - path: assets/val.json
       md5: 85e91ed71374a7628c021d05533f1964
   outs:
     - path: out/model-best
-      md5: 206dab49bcf2b4a9f130182642c90d3c
+      md5: 8a582dfd45e48601dc397802a77225c4
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:

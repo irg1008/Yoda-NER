@@ -30,7 +30,7 @@ vars:
   train_out: "out"
   eval_freq: 10
   epochs: 1000
-  patience: 50
+  patience: 200
   model: "out/model-best"
 
   # Metrics
