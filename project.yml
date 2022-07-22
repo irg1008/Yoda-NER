@@ -23,16 +23,19 @@ vars:
   base_config: "configs/base_config.cfg"
   config: "configs/config.cfg"
 
+  # Split
+  train_split: 0.7
+
   # Train parameters
   train_out: "out"
   eval_freq: 10
-  epochs: 100
+  epochs: 1000
   patience: 50
   model: "out/model-best"
 
   # Metrics
   metrics: "out/metrics.json"
-  view_example: "Esto es un ejemplo de la visualización"
+  view_example: "Chaqueta Salomon DrifterLoft Hoodie Hombre M Azul/Verde"
 
   version: "0.0.1"
   # Set your GPU ID, -1 is CPU
@@ -61,7 +64,7 @@ commands:
   - name: "split"
     help: "Convert from custom data to train and val data"
     script:
-      - "python scripts/split_data.py ${vars.data} ${vars.train} ${vars.val}"
+      - "python scripts/split_data.py ${vars.data} ${vars.train} ${vars.val} ${vars.train_split}"
     deps:
       - "${vars.data}"
       - "scripts/split_data.py"

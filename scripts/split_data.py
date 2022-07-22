@@ -2,10 +2,9 @@ import typer
 import pandas as pd
 import json
 from pathlib import Path
-
-
+from random import shuffle
 from split_types import Entity, Entities, TitleData, TitlesData
-
+import re
 
 # IMPORTANT: First column must be title column. Rest can be any N features wanted.
 
@@ -25,21 +24,22 @@ from split_types import Entity, Entities, TitleData, TitlesData
 UNKNOWN_DATA = "unk"
 
 
+def split_title(title: str):
+    return re.split(" |/", title)
+
+
 def find_word_start_end(title: str, word: str) -> tuple[int, int]:
-    words = title.lower().split()
+    words = split_title(title.lower())
     index = words.index(word.lower())
 
     start = sum(len(word) + 1 for word in words[:index])
-    double_spaces = title[:start].count("  ")
-    start += double_spaces
-    
     end = start + len(word)
-    
+
     return start, end
 
 
 def is_word_in_title(title: str, word: str) -> bool:
-    title_words = title.lower().split()
+    title_words = split_title(title.lower())
     return word.lower() in title_words
 
 
@@ -47,10 +47,12 @@ def get_title_data(title: str, features: pd.Series, tags: pd.Index) -> TitleData
     entities: Entities = []  # Initial, final and tag
 
     for tag, feature in zip(tags, features):
-        if feature != UNKNOWN_DATA and is_word_in_title(title, feature):
-            start, end = find_word_start_end(title, feature)
-            entity: Entity = (start, end, tag)
-            entities.append(entity)
+        values = feature.split("/")
+        for val in values:
+            if val != UNKNOWN_DATA and is_word_in_title(title, val):
+                start, end = find_word_start_end(title, val)
+                entity: Entity = (start, end, tag)
+                entities.append(entity)
 
     return (title, {"entities": entities})
 
@@ -73,6 +75,7 @@ def read_csv(csv_path: Path, sep=";") -> pd.DataFrame:
 
 def split(titles_data: TitlesData, train_size: float) -> tuple[TitlesData, TitlesData]:
     split_point = int(len(titles_data) * train_size)
+    shuffle(titles_data)
     train_data, val_data = titles_data[:split_point], titles_data[split_point:]
     return train_data, val_data
 
@@ -82,17 +85,17 @@ def export_json(titles_data: TitlesData, json_path: Path):
         f.write(json.dumps(titles_data))
 
 
-def main(csv_path: Path, train_path: Path, val_path: Path):
+def main(csv_path: Path, train_path: Path, val_path: Path, train_split: float):
     data = read_csv(csv_path)
     titles_data = get_titles_data(data)
 
-    train_data, val_data = split(titles_data, train_size=0.6)
+    train_data, val_data = split(titles_data, train_size=train_split)
 
     export_json(train_data, train_path)
     export_json(val_data, val_path)
 
     print(
-        f"> Successfully exported train and validation data to {train_path} and {val_path}"
+        f"> Successfully exported train and validation data to {train_path} and {val_path} with {len(train_data)} and {len(val_data)} titles respectively."
     )
 
 
