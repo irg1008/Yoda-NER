@@ -66,27 +66,27 @@ train:
     - path: configs/config.cfg
       md5: f1079607b6f50bc4820605e9cc3b83ed
     - path: assets/train.json
-      md5: e3d2ee9d53d9b07d71a91a5a34332d48
+      md5: 562f0d9c1785bb636e0d91009679a5dd
     - path: assets/val.json
-      md5: da4cb1b6547783672d0847411045fd22
+      md5: 85e91ed71374a7628c021d05533f1964
   outs:
     - path: out/model-best
-      md5: e3c29503be09d68550fb8f766f53e0c8
+      md5: 206dab49bcf2b4a9f130182642c90d3c
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:
   cmd: python -m spacy run evaluate
   script:
     - python -m spacy evaluate out/model-best corpus/val.spacy --output out/metrics.json
-      --gpu-id -1
+      --gpu-id 0
   deps:
     - path: out/model-best
-      md5: e3c29503be09d68550fb8f766f53e0c8
+      md5: 206dab49bcf2b4a9f130182642c90d3c
     - path: assets/val.json
       md5: 85e91ed71374a7628c021d05533f1964
   outs:
     - path: out/metrics.json
-      md5: 0dc15db1671e9ef9c68093d1542ef37f
+      md5: b6ba0ae658d8f603d132ad7074003d77
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 package:
