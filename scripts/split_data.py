@@ -42,7 +42,6 @@ def get_title_data(title: str, features: pd.Series, tags: pd.Index) -> TitleData
 
         for val in values:
             start_end = find_word_start_end(title, val)
-            if "azul" in val.lower():
             if val != UNKNOWN_DATA and start_end:
                 start, end = start_end
                 entity: Entity = (start, end, tag)

@@ -9,7 +9,7 @@ vars:
   pipeline: "es_dep_news_trf"
 
   # Custom data
-  data: "assets/features.csv"
+  data: "assets/features_size_color.csv"
 
   # JSON data
   train: "assets/train.json"
