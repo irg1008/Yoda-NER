@@ -54,7 +54,7 @@ workflows:
   all:
     - split
     - convert
-    - create-config
+    - config
     - train
     - evaluate
     - package
@@ -85,7 +85,7 @@ commands:
       - "${vars.sp_train}"
       - "${vars.sp_val}"
 
-  - name: "create-config"
+  - name: "config"
     help: "Create a config for training"
     script:
       - "python -m spacy init fill-config ${vars.base_config} ${vars.config}"

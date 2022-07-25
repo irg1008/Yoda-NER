@@ -38,14 +38,11 @@ def get_title_data(title: str, features: pd.Series, tags: pd.Index) -> TitleData
     entities: Entities = []  # Initial, final and tag
 
     for tag, feature in zip(tags, features):
-        values = feature.split("/")
-
-        for val in values:
-            start_end = find_word_start_end(title, val)
-            if val != UNKNOWN_DATA and start_end:
-                start, end = start_end
-                entity: Entity = (start, end, tag)
-                entities.append(entity)
+        start_end = find_word_start_end(title, feature)
+        if feature != UNKNOWN_DATA and start_end:
+            start, end = start_end
+            entity: Entity = (start, end, tag)
+            entities.append(entity)
 
     return (title, {"entities": entities})
 

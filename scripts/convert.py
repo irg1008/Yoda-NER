@@ -52,6 +52,7 @@ def main(lang: str, json_path: Path, spacy_path: Path):
     db = DocBin()
 
     titles_data = get_json_data(json_path)
+
     for title, data in titles_data:
         doc = nlp.make_doc(title)
         entities: list[Span] = []
