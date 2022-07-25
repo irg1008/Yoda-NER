@@ -64,14 +64,14 @@ train:
       1000 --training.patience 200 --gpu-id 0
   deps:
     - path: configs/config.cfg
-      md5: 1c5164a2bd1bd779f812ab8a3fc6247f
+      md5: 16302bb333a80e77688ac00a0e48a7d2
     - path: assets/train.json
-      md5: 562f0d9c1785bb636e0d91009679a5dd
+      md5: e79773114d0f31d7540b0e365eef4fcb
     - path: assets/val.json
-      md5: 85e91ed71374a7628c021d05533f1964
+      md5: d1d9c50f81cf9af6ed4cc1fe82a6fd70
   outs:
     - path: out/model-best
-      md5: a199c25537d4100a273af29820dde285
+      md5: d2f4f5b373591624a18538e17ca2a832
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:
@@ -81,25 +81,25 @@ evaluate:
       --gpu-id 0
   deps:
     - path: out/model-best
-      md5: a199c25537d4100a273af29820dde285
+      md5: 5d4c3c742f5415d457b6fb574862d007
     - path: assets/val.json
-      md5: 85e91ed71374a7628c021d05533f1964
+      md5: d1d9c50f81cf9af6ed4cc1fe82a6fd70
   outs:
     - path: out/metrics.json
-      md5: 888d860bb81da17a48a6950b7bf021ec
+      md5: 49d67ce05a9488fafdbde14607ec845f
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 package:
   cmd: python -m spacy run package
   script:
-    - python -m spacy package out/model-best packages --name yoda_ner --version 0.0.1
+    - python -m spacy package out/model-best packages --name yoda_ner --version 0.0.2
       --force
   deps:
     - path: out/model-best
-      md5: 5930dfa74f35e2316a685e20474ab779
+      md5: 5d4c3c742f5415d457b6fb574862d007
   outs:
-    - path: packages/es_yoda_ner-0.0.1/dist/es_yoda_ner-0.0.1.tar.gz
-      md5: 398a53740050ecb8726cb0c400ac6291
+    - path: packages/es_yoda_ner-0.0.2/dist/es_yoda_ner-0.0.2.tar.gz
+      md5: 9b481540bb4b3df9d060563a4fb99fff
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 config:
@@ -108,9 +108,9 @@ config:
     - python -m spacy init fill-config configs/base_config.cfg configs/config.cfg
   deps:
     - path: configs/base_config.cfg
-      md5: f0960f3949e3451f35f567af9eb36d37
+      md5: 91f7ea2121a841d353981676e50fb4cc
   outs:
     - path: configs/config.cfg
-      md5: 5132b2f203aae41497ba61aab3366b65
+      md5: 84c70006cd524c542fc69f6947c9a548
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
