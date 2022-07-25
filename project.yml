@@ -24,20 +24,20 @@ vars:
   config: "configs/config.cfg"
 
   # Split
-  train_split: 0.7
+  train_split: 0.6
 
   # Train parameters
   train_out: "out"
   eval_freq: 10
-  epochs: 1000
-  patience: 200
+  epochs: 600
+  patience: 100
   model: "out/model-best"
 
   # Metrics
   metrics: "out/metrics.json"
   view_example: "Chaqueta Salomon DrifterLoft Hoodie Hombre M Azul y Verde"
 
-  version: "0.0.2"
+  version: "0.0.3"
   # Set your GPU ID, -1 is CPU
   gpu_id: 0
 

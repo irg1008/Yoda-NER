@@ -2,17 +2,17 @@ split:
   cmd: python -m spacy run split
   script:
     - python scripts/split_data.py assets/features_size_color.csv assets/train.json
-      assets/val.json 0.7
+      assets/val.json 0.6
   deps:
     - path: assets/features_size_color.csv
       md5: 4fc26018baab340ba1875a6f58375d5e
     - path: scripts/split_data.py
-      md5: 04835d1993930fff29004d9f17c03a2c
+      md5: 63d7acbd97a9a4ea9f1e50090f5511f9
   outs:
     - path: assets/train.json
-      md5: e79773114d0f31d7540b0e365eef4fcb
+      md5: aef57f9edea30b1f380caf751d709fd9
     - path: assets/val.json
-      md5: d1d9c50f81cf9af6ed4cc1fe82a6fd70
+      md5: a4165d59430557fe3c5e45d1d887e2d7
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 convert:
@@ -22,16 +22,16 @@ convert:
     - python scripts/convert.py es assets/val.json corpus/val.spacy
   deps:
     - path: assets/train.json
-      md5: e79773114d0f31d7540b0e365eef4fcb
+      md5: aef57f9edea30b1f380caf751d709fd9
     - path: assets/val.json
-      md5: d1d9c50f81cf9af6ed4cc1fe82a6fd70
+      md5: a4165d59430557fe3c5e45d1d887e2d7
     - path: scripts/convert.py
-      md5: 761309f980cf9a9887de631049c54363
+      md5: 615662cc5af0c87f9317ed862a27197b
   outs:
     - path: corpus/train.spacy
-      md5: f11925b48987420aa59447a0f0777fe3
+      md5: dd016b8660b9db1a5d75c434c79f6746
     - path: corpus/val.spacy
-      md5: 01ba6c2b01518ce6d3a0cba5a77ee818
+      md5: 4b708c033b8c7d14d3e8bdf5a6940012
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 setup:
@@ -64,14 +64,14 @@ train:
       1000 --training.patience 200 --gpu-id 0
   deps:
     - path: configs/config.cfg
-      md5: 16302bb333a80e77688ac00a0e48a7d2
+      md5: 84c70006cd524c542fc69f6947c9a548
     - path: assets/train.json
       md5: e79773114d0f31d7540b0e365eef4fcb
     - path: assets/val.json
       md5: d1d9c50f81cf9af6ed4cc1fe82a6fd70
   outs:
     - path: out/model-best
-      md5: d2f4f5b373591624a18538e17ca2a832
+      md5: 3ee37b9e70c25ae18483b1d8bf8ea513
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:
