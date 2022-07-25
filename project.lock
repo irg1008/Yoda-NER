@@ -5,14 +5,14 @@ split:
       0.7
   deps:
     - path: assets/features.csv
-      md5: b9f521e11e965d5e3fae0708a811d1dd
+      md5: 14aee0909933af502cc20c52e7d71ac0
     - path: scripts/split_data.py
-      md5: b8915ce8dfcf5b10bf145291cd131a23
+      md5: 689cfe2a05a1fc7a6107422000be35f5
   outs:
     - path: assets/train.json
-      md5: 562f0d9c1785bb636e0d91009679a5dd
+      md5: fed1844986d38d0b460692e68e74884f
     - path: assets/val.json
-      md5: 85e91ed71374a7628c021d05533f1964
+      md5: acca5536a4ee3b63f3f40fc90bf2f36f
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 convert:
@@ -22,16 +22,16 @@ convert:
     - python scripts/convert.py es assets/val.json corpus/val.spacy
   deps:
     - path: assets/train.json
-      md5: 562f0d9c1785bb636e0d91009679a5dd
+      md5: fed1844986d38d0b460692e68e74884f
     - path: assets/val.json
-      md5: 85e91ed71374a7628c021d05533f1964
+      md5: acca5536a4ee3b63f3f40fc90bf2f36f
     - path: scripts/convert.py
       md5: 225ba70044cf8d56247afeacdc6aa38e
   outs:
     - path: corpus/train.spacy
-      md5: 48badc042ef535fe44fdc0e061e16405
+      md5: 649fb55778793b4603a6523c863fe713
     - path: corpus/val.spacy
-      md5: b78f96000fcf92999ea73949be3ca3e3
+      md5: 53f16227ed515093f7a1aa7c3d189395
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 setup:
@@ -61,17 +61,17 @@ train:
   script:
     - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
       --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
-      1000 --training.patience 50 --gpu-id 0
+      1000 --training.patience 200 --gpu-id 0
   deps:
     - path: configs/config.cfg
-      md5: 03cdb8463a93022d7f718a016fa00496
+      md5: 1c5164a2bd1bd779f812ab8a3fc6247f
     - path: assets/train.json
       md5: 562f0d9c1785bb636e0d91009679a5dd
     - path: assets/val.json
       md5: 85e91ed71374a7628c021d05533f1964
   outs:
     - path: out/model-best
-      md5: 8a582dfd45e48601dc397802a77225c4
+      md5: a199c25537d4100a273af29820dde285
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:
@@ -81,12 +81,12 @@ evaluate:
       --gpu-id 0
   deps:
     - path: out/model-best
-      md5: 206dab49bcf2b4a9f130182642c90d3c
+      md5: a199c25537d4100a273af29820dde285
     - path: assets/val.json
       md5: 85e91ed71374a7628c021d05533f1964
   outs:
     - path: out/metrics.json
-      md5: b6ba0ae658d8f603d132ad7074003d77
+      md5: 888d860bb81da17a48a6950b7bf021ec
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 package:

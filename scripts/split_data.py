@@ -5,6 +5,7 @@ from pathlib import Path
 from random import shuffle
 from split_types import Entity, Entities, TitleData, TitlesData
 import re
+from typing import Union
 
 # IMPORTANT: First column must be title column. Rest can be any N features wanted.
 
@@ -24,23 +25,13 @@ import re
 UNKNOWN_DATA = "unk"
 
 
-def split_title(title: str):
-    return re.split(" |/", title)
+def find_word_start_end(title: str, word: str) -> Union[tuple[int, int], None]:
+    search = re.search(f" {word.lower()} ", f" {title.lower()} ")
+    if not search:
+        return None
 
-
-def find_word_start_end(title: str, word: str) -> tuple[int, int]:
-    words = split_title(title.lower())
-    index = words.index(word.lower())
-
-    start = sum(len(word) + 1 for word in words[:index])
-    end = start + len(word)
-
-    return start, end
-
-
-def is_word_in_title(title: str, word: str) -> bool:
-    title_words = split_title(title.lower())
-    return word.lower() in title_words
+    start, end = search.span()
+    return start, end - 2
 
 
 def get_title_data(title: str, features: pd.Series, tags: pd.Index) -> TitleData:
@@ -48,9 +39,12 @@ def get_title_data(title: str, features: pd.Series, tags: pd.Index) -> TitleData
 
     for tag, feature in zip(tags, features):
         values = feature.split("/")
+
         for val in values:
-            if val != UNKNOWN_DATA and is_word_in_title(title, val):
-                start, end = find_word_start_end(title, val)
+            start_end = find_word_start_end(title, val)
+            if "azul" in val.lower():
+            if val != UNKNOWN_DATA and start_end:
+                start, end = start_end
                 entity: Entity = (start, end, tag)
                 entities.append(entity)
 
