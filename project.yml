@@ -24,7 +24,7 @@ vars:
   config: "configs/config.cfg"
 
   # Split
-  train_split: 0.6
+  train_split: 0.8
 
   # Train parameters
   train_out: "out"

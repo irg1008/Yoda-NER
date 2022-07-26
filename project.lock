@@ -61,17 +61,17 @@ train:
   script:
     - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
       --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
-      1000 --training.patience 200 --gpu-id 0
+      600 --training.patience 100 --gpu-id 0
   deps:
     - path: configs/config.cfg
       md5: 84c70006cd524c542fc69f6947c9a548
     - path: assets/train.json
-      md5: e79773114d0f31d7540b0e365eef4fcb
+      md5: aef57f9edea30b1f380caf751d709fd9
     - path: assets/val.json
-      md5: d1d9c50f81cf9af6ed4cc1fe82a6fd70
+      md5: a4165d59430557fe3c5e45d1d887e2d7
   outs:
     - path: out/model-best
-      md5: 3ee37b9e70c25ae18483b1d8bf8ea513
+      md5: 22a5b1219da47a98e1fddf6dea2ec83f
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:
