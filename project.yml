@@ -6,7 +6,7 @@ spacy_version: "3.4.0"
 vars:
   name: "yoda_ner"
   lang: "es"
-  pipeline: "es_dep_news_trf"
+  vectors_model: "es_dep_news_trf"
 
   # Custom data
   data: "assets/features_size_color.csv"
@@ -29,7 +29,7 @@ vars:
   # Train parameters
   train_out: "out"
   eval_freq: 10
-  epochs: 600
+  epochs: 200
   patience: 100
   model: "out/model-best"
 
@@ -41,7 +41,7 @@ vars:
   # Set your GPU ID, -1 is CPU
   gpu_id: 0
 
-directories: ["assets", "corpus", "configs", "scripts", "notebooks"]
+directories: ["assets", "corpus", "configs", "scripts", "notebooks", "packages"]
 
 assets:
   - dest: "${vars.train}"
@@ -57,7 +57,6 @@ workflows:
     - config
     - train
     - evaluate
-    - package
     - view
 
 commands:
@@ -98,6 +97,17 @@ commands:
     help: "Train the NER model"
     script:
       - "python -m spacy train ${vars.config} --output ${vars.train_out} --paths.dev ${vars.sp_val} --paths.train ${vars.sp_train} --training.eval_frequency ${vars.eval_freq} --training.max_steps ${vars.epochs} --training.patience ${vars.patience} --gpu-id ${vars.gpu_id}"
+    deps:
+      - "${vars.config}"
+      - "${vars.train}"
+      - "${vars.val}"
+    outputs:
+      - "${vars.model}"
+
+  - name: "train-with-vectors"
+    help: "Train the NER model with vectors"
+    script:
+      - "python -m spacy train ${vars.config} --output ${vars.train_out} --paths.dev ${vars.sp_val} --paths.train ${vars.sp_train} --training.eval_frequency ${vars.eval_freq} --training.max_steps ${vars.epochs} --training.patience ${vars.patience} --gpu-id ${vars.gpu_id} --initialize.vectors ${vars.vectors_model} --components.tok2vec.model.embed.include_static_vectors true"
     deps:
       - "${vars.config}"
       - "${vars.train}"
