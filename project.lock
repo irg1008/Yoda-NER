@@ -108,9 +108,9 @@ config:
     - python -m spacy init fill-config configs/base_config.cfg configs/config.cfg
   deps:
     - path: configs/base_config.cfg
-      md5: 7e954512579608b306d9f3052e1993d7
+      md5: f417a1305b573188c3aa587a086a534b
   outs:
     - path: configs/config.cfg
-      md5: f1079607b6f50bc4820605e9cc3b83ed
+      md5: 82c0177b4c4721f4a58423d51f7bd923
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
