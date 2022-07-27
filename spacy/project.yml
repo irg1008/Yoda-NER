@@ -20,7 +20,7 @@ vars:
   sp_val: "corpus/val.spacy"
 
   # Config
-  base_config: "configs/base_config.cfg"
+  base_config: "configs/cpu_config.cfg"
   config: "configs/config.cfg"
 
   # Split
@@ -29,7 +29,7 @@ vars:
   # Train parameters
   train_out: "out"
   eval_freq: 10
-  epochs: 200
+  epochs: 2000
   patience: 100
   model: "out/model-best"
 

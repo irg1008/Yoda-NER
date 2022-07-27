@@ -105,12 +105,31 @@ package:
 config:
   cmd: python -m spacy run config
   script:
-    - python -m spacy init fill-config configs/base_config.cfg configs/config.cfg
+    - python -m spacy init fill-config configs/cpu_config.cfg configs/config.cfg
   deps:
-    - path: configs/base_config.cfg
-      md5: f417a1305b573188c3aa587a086a534b
+    - path: configs/cpu_config.cfg
+      md5: 2729fd28b94746d45602c246bbdaa0c0
   outs:
     - path: configs/config.cfg
-      md5: 82c0177b4c4721f4a58423d51f7bd923
+      md5: eab925bbd2ea6831acf9abd976b264a9
+  spacy_version: 3.4.0
+  spacy_git_version: d583626a8
+train-with-vectors:
+  cmd: python -m spacy run train-with-vectors
+  script:
+    - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
+      --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
+      200 --training.patience 100 --gpu-id 0 --initialize.vectors es_dep_news_trf
+      --components.tok2vec.model.embed.include_static_vectors true
+  deps:
+    - path: configs/config.cfg
+      md5: eab925bbd2ea6831acf9abd976b264a9
+    - path: assets/train.json
+      md5: 22a5b70691270fb575f3924be2ac6536
+    - path: assets/val.json
+      md5: 6fb0bd9c8ad7c5abfe6060954e9edc0b
+  outs:
+    - path: out/model-best
+      md5: d0812bf19555b03e8423c7ed6d7099e8
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
