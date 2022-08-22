@@ -9,18 +9,18 @@ vars:
   vectors_model: "es_dep_news_trf"
 
   # Custom data
-  data: "assets/features_size_color.csv"
+  data: "assets/products/features_size_color.csv"
 
   # JSON data
-  train: "assets/train.json"
-  val: "assets/val.json"
+  train: "assets/products/train.json"
+  val: "assets/products/val.json"
 
   # Spacy
   sp_train: "corpus/train.spacy"
   sp_val: "corpus/val.spacy"
 
   # Config
-  base_config: "configs/cpu_config.cfg"
+  base_config: "configs/base_config.cfg"
   config: "configs/config.cfg"
 
   # Split
@@ -29,7 +29,7 @@ vars:
   # Train parameters
   train_out: "out"
   eval_freq: 10
-  epochs: 2000
+  epochs: 200
   patience: 100
   model: "out/model-best"
 

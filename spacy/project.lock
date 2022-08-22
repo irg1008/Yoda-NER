@@ -1,37 +1,37 @@
 split:
   cmd: python -m spacy run split
   script:
-    - python scripts/split_data.py assets/features_size_color.csv assets/train.json
-      assets/val.json 0.8
+    - python scripts/split_data.py assets/products/features_size_color.csv assets/products/train.json
+      assets/products/val.json 0.8
   deps:
-    - path: assets/features_size_color.csv
-      md5: 4fc26018baab340ba1875a6f58375d5e
+    - path: assets/products/features_size_color.csv
+      md5: 318f968a3887f8c634929fa9bc0f5437
     - path: scripts/split_data.py
-      md5: 63d7acbd97a9a4ea9f1e50090f5511f9
+      md5: 71a2e116d8f30f137e219f529623e17e
   outs:
-    - path: assets/train.json
-      md5: 22a5b70691270fb575f3924be2ac6536
-    - path: assets/val.json
-      md5: 6fb0bd9c8ad7c5abfe6060954e9edc0b
+    - path: assets/products/train.json
+      md5: 1cab9a8099e23c0c094ebb9bdc0f28eb
+    - path: assets/products/val.json
+      md5: 3f902932c491d70c285b9903f0a64950
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 convert:
   cmd: python -m spacy run convert
   script:
-    - python scripts/convert.py es assets/train.json corpus/train.spacy
-    - python scripts/convert.py es assets/val.json corpus/val.spacy
+    - python scripts/convert.py es assets/products/train.json corpus/train.spacy
+    - python scripts/convert.py es assets/products/val.json corpus/val.spacy
   deps:
-    - path: assets/train.json
-      md5: 22a5b70691270fb575f3924be2ac6536
-    - path: assets/val.json
-      md5: 6fb0bd9c8ad7c5abfe6060954e9edc0b
+    - path: assets/products/train.json
+      md5: 0c1862fa2fb1afd6e5da06bb4b4f8be1
+    - path: assets/products/val.json
+      md5: 14ef24ce87f5d19a6a2325c9463faf1d
     - path: scripts/convert.py
       md5: 615662cc5af0c87f9317ed862a27197b
   outs:
     - path: corpus/train.spacy
-      md5: 443e9382f985886c5e8f9da33c3a38b0
+      md5: 7ae3391b13fdf5cda50acb3e89e3ad21
     - path: corpus/val.spacy
-      md5: 20ff0fc70f2d9ce8924062761eac064b
+      md5: ee48e3bb1e99ccafccb0f2e495ac2df4
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 setup:
@@ -61,17 +61,17 @@ train:
   script:
     - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
       --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
-      300 --training.patience 100 --gpu-id 0
+      200 --training.patience 100 --gpu-id 0
   deps:
     - path: configs/config.cfg
       md5: f1079607b6f50bc4820605e9cc3b83ed
-    - path: assets/train.json
-      md5: 22a5b70691270fb575f3924be2ac6536
-    - path: assets/val.json
-      md5: 6fb0bd9c8ad7c5abfe6060954e9edc0b
+    - path: assets/products/train.json
+      md5: 0c1862fa2fb1afd6e5da06bb4b4f8be1
+    - path: assets/products/val.json
+      md5: 14ef24ce87f5d19a6a2325c9463faf1d
   outs:
     - path: out/model-best
-      md5: d817229fe2e261eacdd21667de19c372
+      md5: c78f4b1873ca86c85736fe9ac6640f62
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 evaluate:
@@ -81,12 +81,12 @@ evaluate:
       --gpu-id 0
   deps:
     - path: out/model-best
-      md5: d817229fe2e261eacdd21667de19c372
-    - path: assets/val.json
-      md5: 6fb0bd9c8ad7c5abfe6060954e9edc0b
+      md5: c78f4b1873ca86c85736fe9ac6640f62
+    - path: assets/products/val.json
+      md5: 14ef24ce87f5d19a6a2325c9463faf1d
   outs:
     - path: out/metrics.json
-      md5: 670882185cbe12b1722460ba2043891d
+      md5: 5f8da1a3bc69e7a3008f6e8b8dd9c87a
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 package:
@@ -96,22 +96,22 @@ package:
       --force
   deps:
     - path: out/model-best
-      md5: d817229fe2e261eacdd21667de19c372
+      md5: 276ab97b4b184262a808bdc9f19ba316
   outs:
     - path: packages/es_yoda_ner-0.0.3/dist/es_yoda_ner-0.0.3.tar.gz
-      md5: b5d1de081ff905c027ab4a49c76c2237
+      md5: b5039e0c8e3eb40570d38eb98906fa80
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 config:
   cmd: python -m spacy run config
   script:
-    - python -m spacy init fill-config configs/cpu_config.cfg configs/config.cfg
+    - python -m spacy init fill-config configs/base_config.cfg configs/config.cfg
   deps:
-    - path: configs/cpu_config.cfg
-      md5: 2729fd28b94746d45602c246bbdaa0c0
+    - path: configs/base_config.cfg
+      md5: 7e954512579608b306d9f3052e1993d7
   outs:
     - path: configs/config.cfg
-      md5: eab925bbd2ea6831acf9abd976b264a9
+      md5: f1079607b6f50bc4820605e9cc3b83ed
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
 train-with-vectors:
@@ -119,7 +119,7 @@ train-with-vectors:
   script:
     - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
       --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
-      200 --training.patience 100 --gpu-id 0 --initialize.vectors es_dep_news_trf
+      2000 --training.patience 100 --gpu-id 0 --initialize.vectors es_dep_news_trf
       --components.tok2vec.model.embed.include_static_vectors true
   deps:
     - path: configs/config.cfg
@@ -130,6 +130,6 @@ train-with-vectors:
       md5: 6fb0bd9c8ad7c5abfe6060954e9edc0b
   outs:
     - path: out/model-best
-      md5: d0812bf19555b03e8423c7ed6d7099e8
+      md5: 39a30f23f586d4c5069248977895e427
   spacy_version: 3.4.0
   spacy_git_version: d583626a8
