@@ -37,8 +37,6 @@ def main():
     export_csv(val_data, splits_folder + "val.csv")
     export_csv(test_data, splits_folder + "test.csv")
 
-    print("Data split successfully.")
-
 
 if __name__ == "__main__":
     main()

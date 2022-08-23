@@ -136,8 +136,6 @@ def main():
         corpus = parse_corpus(data)
         export_corpus(corpus, corpus_folder + name + ".txt")
 
-    print("Corpus created successfully.")
-
 
 if __name__ == "__main__":
     main()

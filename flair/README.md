@@ -1,5 +1,7 @@
 # Order of execution
 
-1. split_data
-2. create_corpus
-3. read_corpus
+Ejecuta run.py para ejecutar todo el proceso de preparación, entrenamiento y test.
+
+o
+
+Ejecuta los archivos individuales para cada paso.
