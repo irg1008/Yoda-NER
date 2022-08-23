@@ -26,8 +26,6 @@ def main(text):
 
 
 if __name__ == "__main__":
-    text = """
-    Test
-    """
+    text = "Cremallera roja/verde talla 45"
 
     main(text)

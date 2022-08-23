@@ -24,8 +24,8 @@ def get_sequence_tagger(
     return tagger
 
 
-def get_embedding_stack() -> StackedEmbeddings:
-    embeddings: list[TokenEmbeddings] = [WordEmbeddings("glove")]
+def get_embedding_stack(embedding="glove") -> StackedEmbeddings:
+    embeddings: list[TokenEmbeddings] = [WordEmbeddings(embedding)]
     stack = StackedEmbeddings(embeddings=embeddings)
     return stack
 
@@ -50,7 +50,7 @@ def main(corpus: Corpus):
     LABEL_TYPE: LabelType = "ner"
 
     label_dict = get_corpus_dict(corpus, LABEL_TYPE)
-    embeddings = get_embedding_stack()
+    embeddings = get_embedding_stack("es")
     tagger = get_sequence_tagger(embeddings, label_dict, LABEL_TYPE)
 
     model_path = path.join(path.dirname(__file__), "../models/")
