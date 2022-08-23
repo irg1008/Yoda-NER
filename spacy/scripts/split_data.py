@@ -60,7 +60,7 @@ def get_titles_data(data: pd.DataFrame) -> TitlesData:
     return titles_data
 
 
-def read_csv(csv_path: Path, sep=";") -> pd.DataFrame:
+def read_csv(csv_path: Path, sep=",") -> pd.DataFrame:
     return pd.read_csv(csv_path, sep=sep)
 
 
@@ -101,7 +101,7 @@ def duplicate_data(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def main(csv_path: Path, train_path: Path, val_path: Path, train_split: float):
-    data = read_csv(csv_path)
+    data = read_csv(csv_path, sep=",")
 
     duplicated_data = duplicate_data(data)
     titles_data = get_titles_data(duplicated_data)
