@@ -17,7 +17,7 @@ def predict(model: SequenceTagger, sentence: Sentence) -> Sentence:
     return sentence
 
 
-def main(text):
+def main(text: str):
     model_path = path.join(path.dirname(__file__), "../models/")
     model = load_model(model_path + "test/best-model.pt")
 
