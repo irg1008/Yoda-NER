@@ -56,8 +56,8 @@ def main(corpus: Corpus):
     model_path = path.join(path.dirname(__file__), "../models/")
 
     LEANRING_RATE = 0.1
-    MAX_EPOCHS = 10
-    BATCH_SIZE = 32
+    MAX_EPOCHS = 50
+    BATCH_SIZE = 64
 
     train(
         tagger,
