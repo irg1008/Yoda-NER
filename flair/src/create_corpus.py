@@ -1,6 +1,7 @@
-import pandas as pd
+import re
 from os import path
-from difflib import SequenceMatcher
+
+import pandas as pd
 
 Pos = tuple[int, int]
 PosData = list[tuple[Pos, str]]
@@ -18,9 +19,7 @@ def clean(text: str) -> str:
         "&",
         "(",
         ")",
-        "/",
         "*",
-        ".",
         ":",
         ";",
         "<",
@@ -45,16 +44,11 @@ def clean(text: str) -> str:
     return text
 
 
-def find_match_pos(sentence: str, word: str) -> Pos:
-    pattern = word.strip()
-
-    seqMatch = SequenceMatcher(None, sentence, pattern)
-    match = seqMatch.find_longest_match(0, len(sentence), 0, len(pattern))
-
-    start = match.a
-    end = match.a + match.size
-
-    return (start, end)
+def find_match_pos(sentence: str, word: str) -> list[Pos]:
+    sentence = sentence.lower()
+    word = word.strip().lower()
+    matches: list[Pos] = [m.span() for m in re.finditer(word, sentence)]
+    return matches
 
 
 def mark_sentence(sentence: str, pos_data: PosData) -> dict:
@@ -93,9 +87,15 @@ def get_pos_data(
     pos_data: PosData = []
 
     for feat, name in zip(features, features_name):
-        feat = clean(feat)
-        pos = find_match_pos(sentence, feat)
-        pos_data.append((pos, name))
+
+        individual_feats = feat.split("/")
+
+        for ind_feat in individual_feats:
+            ind_feat = clean(ind_feat)
+            pos_list = find_match_pos(sentence, ind_feat)
+
+            for pos in pos_list:
+                pos_data.append((pos, name))
 
     return pos_data
 

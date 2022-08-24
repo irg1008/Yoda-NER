@@ -14,7 +14,7 @@ from flair.embeddings import (
 from flair.models import SequenceTagger
 from flair.trainers import ModelTrainer
 
-from torch.optim import SGD
+from torch.optim import SGD, Adam
 
 import read_corpus
 
@@ -73,13 +73,17 @@ def train(
 def get_embeddings() -> list[TokenEmbeddings]:
     flair_forward_embedding = PooledFlairEmbeddings("es-forward")
     flair_backward_embedding = PooledFlairEmbeddings("es-backward")
-    transformer_embedding = TransformerWordEmbeddings("dccuchile/bert-base-spanish-wwm-cased")
-    # word_embedding = WordEmbeddings("es-crawl")
+    transformer_embedding = TransformerWordEmbeddings(
+        "dccuchile/bert-base-spanish-wwm-cased"
+    )
+    word_embedding = WordEmbeddings("es-crawl")
+    # elmo_embedding = ELMoEmbeddings()
     return [
         transformer_embedding,
         flair_forward_embedding,
         flair_backward_embedding,
         # word_embedding,
+        # elmo_embedding,
     ]
 
 
