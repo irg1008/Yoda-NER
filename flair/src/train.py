@@ -7,10 +7,14 @@ from flair.embeddings import (
     TokenEmbeddings,
     TransformerWordEmbeddings,
     WordEmbeddings,
+    ELMoEmbeddings,
     FlairEmbeddings,
+    PooledFlairEmbeddings,
 )
 from flair.models import SequenceTagger
 from flair.trainers import ModelTrainer
+
+from torch.optim import SGD
 
 import read_corpus
 
@@ -18,7 +22,10 @@ LabelType = Literal["ner", "pos"]
 
 
 def get_sequence_tagger(
-    embeddings: StackedEmbeddings, tag_dictionary: Dictionary, label_type: LabelType
+    embeddings: StackedEmbeddings,
+    tag_dictionary: Dictionary,
+    label_type: LabelType,
+    dropout=0.0,
 ) -> SequenceTagger:
     tagger: SequenceTagger = SequenceTagger(
         hidden_size=256,
@@ -26,11 +33,11 @@ def get_sequence_tagger(
         tag_dictionary=tag_dictionary,
         tag_type=label_type,
         use_crf=True,
+        dropout=dropout,
     )
     return tagger
 
 
-# List of embeddings: https://github.com/flairNLP/flair/blob/master/resources/docs/TUTORIAL_4_ELMO_BERT_FLAIR_EMBEDDING.md
 def get_embedding_stack(embeddings: list[TokenEmbeddings]) -> StackedEmbeddings:
     stack = StackedEmbeddings(embeddings=embeddings)
     return stack
@@ -45,7 +52,7 @@ def train(
     corpus: Corpus,
     out: str,
     lr=0.1,
-    epochs=20,
+    epochs=15,
     batch_size=32,
 ):
     trainer = ModelTrainer(tagger, corpus)
@@ -55,14 +62,25 @@ def train(
         mini_batch_size=batch_size,
         max_epochs=epochs,
         use_tensorboard=True,
+        tensorboard_log_dir=f"{out}/tensorboard",
+        optimizer=SGD,
     )
 
 
+# List of embeddings: https://github.com/flairNLP/flair/blob/master/resources/docs/TUTORIAL_4_ELMO_BERT_FLAIR_EMBEDDING.md
+# Examples:
+#   - https://huggingface.co/mrm8488/bert-spanish-cased-finetuned-ner
 def get_embeddings() -> list[TokenEmbeddings]:
-    flair_forward_embedding = FlairEmbeddings("multi-forward")
-    flair_backward_embedding = FlairEmbeddings("multi-backward")
-    bert_embedding = TransformerWordEmbeddings("bert-base-multilingual-cased")
-    return [flair_forward_embedding, flair_backward_embedding, bert_embedding]
+    flair_forward_embedding = PooledFlairEmbeddings("es-forward")
+    flair_backward_embedding = PooledFlairEmbeddings("es-backward")
+    transformer_embedding = TransformerWordEmbeddings("dccuchile/bert-base-spanish-wwm-cased")
+    # word_embedding = WordEmbeddings("es-crawl")
+    return [
+        transformer_embedding,
+        flair_forward_embedding,
+        flair_backward_embedding,
+        # word_embedding,
+    ]
 
 
 def main(corpus: Corpus):
@@ -77,8 +95,8 @@ def main(corpus: Corpus):
     model_path = path.join(path.dirname(__file__), "../models/")
 
     LEANRING_RATE = 0.1
-    MAX_EPOCHS = 50
-    BATCH_SIZE = 64
+    MAX_EPOCHS = 10
+    BATCH_SIZE = 32
 
     train(
         tagger,

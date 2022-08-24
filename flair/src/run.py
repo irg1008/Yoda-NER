@@ -26,7 +26,7 @@ def main():
     train.main(corpus)
 
     log("Prediction example")
-    predict.main("Cremallera roja talla 56")
+    predict.main("BOTAS CHIRUCA GREDOS SUPRA 12 GORE-TEX MARRON 43 Marron")
 
 
 if __name__ == "__main__":
