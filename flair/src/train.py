@@ -77,7 +77,8 @@ def get_embeddings() -> list[TokenEmbeddings]:
 
     sm_flair_forward_embedding = FlairEmbeddings("es-forward-fast")
     sm_flair_backward_embedding = FlairEmbeddings("es-backward-fast")
-    sm_word_embedding = WordEmbeddings("glove")
+    sm_word_embedding = WordEmbeddings("es")
+    glove_word_embedding = WordEmbeddings("glove")
 
     transformer_embedding = TransformerWordEmbeddings(
         "dccuchile/bert-base-spanish-wwm-cased"
@@ -90,7 +91,8 @@ def get_embeddings() -> list[TokenEmbeddings]:
         # word_embedding,
         sm_flair_forward_embedding,
         sm_flair_backward_embedding,
-        sm_word_embedding,
+        # sm_word_embedding,
+        glove_word_embedding,
     ]
 
 
@@ -112,7 +114,7 @@ def main(corpus: Corpus):
     train(
         tagger,
         corpus,
-        out=model_path + "small",
+        out=model_path + "glove",
         lr=LEANRING_RATE,
         epochs=MAX_EPOCHS,
         batch_size=BATCH_SIZE,
