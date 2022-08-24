@@ -26,6 +26,6 @@ def main(text: str):
 
 
 if __name__ == "__main__":
-    text = "Cremallera roja 45 chaqueta S naranja"
+    text = "Cremallera rojo 45 chaqueta S naranja"
 
     main(text)

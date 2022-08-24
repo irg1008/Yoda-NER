@@ -73,17 +73,24 @@ def train(
 def get_embeddings() -> list[TokenEmbeddings]:
     flair_forward_embedding = PooledFlairEmbeddings("es-forward")
     flair_backward_embedding = PooledFlairEmbeddings("es-backward")
+    word_embedding = WordEmbeddings("es_crawl")
+
+    sm_flair_forward_embedding = FlairEmbeddings("es-forward-fast")
+    sm_flair_backward_embedding = FlairEmbeddings("es-backward-fast")
+    sm_word_embedding = WordEmbeddings("es")
+
     transformer_embedding = TransformerWordEmbeddings(
         "dccuchile/bert-base-spanish-wwm-cased"
     )
-    word_embedding = WordEmbeddings("es-crawl")
-    # elmo_embedding = ELMoEmbeddings()
+
     return [
-        transformer_embedding,
-        flair_forward_embedding,
-        flair_backward_embedding,
+        # transformer_embedding,
+        # flair_forward_embedding,
+        # flair_backward_embedding,
         # word_embedding,
-        # elmo_embedding,
+        sm_flair_forward_embedding,
+        sm_flair_backward_embedding,
+        sm_word_embedding,
     ]
 
 
@@ -105,7 +112,7 @@ def main(corpus: Corpus):
     train(
         tagger,
         corpus,
-        out=model_path + "test",
+        out=model_path + "small",
         lr=LEANRING_RATE,
         epochs=MAX_EPOCHS,
         batch_size=BATCH_SIZE,
