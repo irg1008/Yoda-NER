@@ -2,7 +2,13 @@ from os import path
 from typing import Literal
 
 from flair.data import Corpus, Dictionary
-from flair.embeddings import StackedEmbeddings, TokenEmbeddings, WordEmbeddings
+from flair.embeddings import (
+    StackedEmbeddings,
+    TokenEmbeddings,
+    TransformerWordEmbeddings,
+    WordEmbeddings,
+    FlairEmbeddings,
+)
 from flair.models import SequenceTagger
 from flair.trainers import ModelTrainer
 
@@ -24,8 +30,8 @@ def get_sequence_tagger(
     return tagger
 
 
-def get_embedding_stack(embedding="glove") -> StackedEmbeddings:
-    embeddings: list[TokenEmbeddings] = [WordEmbeddings(embedding)]
+# List of embeddings: https://github.com/flairNLP/flair/blob/master/resources/docs/TUTORIAL_4_ELMO_BERT_FLAIR_EMBEDDING.md
+def get_embedding_stack(embeddings: list[TokenEmbeddings]) -> StackedEmbeddings:
     stack = StackedEmbeddings(embeddings=embeddings)
     return stack
 
@@ -43,15 +49,30 @@ def train(
     batch_size=32,
 ):
     trainer = ModelTrainer(tagger, corpus)
-    trainer.train(out, learning_rate=lr, mini_batch_size=batch_size, max_epochs=epochs)
+    trainer.train(
+        out,
+        learning_rate=lr,
+        mini_batch_size=batch_size,
+        max_epochs=epochs,
+        use_tensorboard=True,
+    )
+
+
+def get_embeddings() -> list[TokenEmbeddings]:
+    flair_forward_embedding = FlairEmbeddings("multi-forward")
+    flair_backward_embedding = FlairEmbeddings("multi-backward")
+    bert_embedding = TransformerWordEmbeddings("bert-base-multilingual-cased")
+    return [flair_forward_embedding, flair_backward_embedding, bert_embedding]
 
 
 def main(corpus: Corpus):
     LABEL_TYPE: LabelType = "ner"
 
     label_dict = get_corpus_dict(corpus, LABEL_TYPE)
-    embeddings = get_embedding_stack("es")
-    tagger = get_sequence_tagger(embeddings, label_dict, LABEL_TYPE)
+
+    embeddings = get_embeddings()
+    stack_embedding = get_embedding_stack(embeddings)
+    tagger = get_sequence_tagger(stack_embedding, label_dict, LABEL_TYPE)
 
     model_path = path.join(path.dirname(__file__), "../models/")
 
