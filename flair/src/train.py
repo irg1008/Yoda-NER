@@ -1,5 +1,5 @@
 from os import path
-from typing import Literal
+from typing import Literal, Union
 
 from flair.data import Corpus, Dictionary
 from flair.embeddings import (
@@ -7,7 +7,7 @@ from flair.embeddings import (
     TokenEmbeddings,
     TransformerWordEmbeddings,
     WordEmbeddings,
-    ELMoEmbeddings,
+    ELMoTransformerEmbeddings,
     FlairEmbeddings,
     PooledFlairEmbeddings,
 )
@@ -22,7 +22,7 @@ LabelType = Literal["ner", "pos"]
 
 
 def get_sequence_tagger(
-    embeddings: StackedEmbeddings,
+    embeddings: Union[StackedEmbeddings, TransformerWordEmbeddings],
     tag_dictionary: Dictionary,
     label_type: LabelType,
     dropout=0.0,
@@ -32,7 +32,7 @@ def get_sequence_tagger(
         embeddings=embeddings,
         tag_dictionary=tag_dictionary,
         tag_type=label_type,
-        use_crf=False,  # https://en.wikipedia.org/wiki/Conditional_random_field
+        use_crf=True,  # https://en.wikipedia.org/wiki/Conditional_random_field
         dropout=dropout,
     )
     return tagger
@@ -80,17 +80,15 @@ def get_embeddings() -> list[TokenEmbeddings]:
     sm_word_embedding = WordEmbeddings("es")
     glove_word_embedding = WordEmbeddings("glove")
 
-    transformer_embedding = TransformerWordEmbeddings(
-        "dccuchile/bert-base-spanish-wwm-cased"
-    )
+    transformer_embedding = TransformerWordEmbeddings("bert-base-multilingual-cased")
 
     return [
         # transformer_embedding,
-        # flair_forward_embedding,
-        # flair_backward_embedding,
+        flair_forward_embedding,
+        flair_backward_embedding,
         # word_embedding,
-        sm_flair_forward_embedding,
-        sm_flair_backward_embedding,
+        # sm_flair_forward_embedding,
+        # sm_flair_backward_embedding,
         # sm_word_embedding,
         glove_word_embedding,
     ]
@@ -114,7 +112,7 @@ def main(corpus: Corpus):
     train(
         tagger,
         corpus,
-        out=model_path + "lite",
+        out=model_path + "semi-lite",
         lr=LEANRING_RATE,
         epochs=MAX_EPOCHS,
         batch_size=BATCH_SIZE,

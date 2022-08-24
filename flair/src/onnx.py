@@ -1,29 +1,25 @@
 from os import path
 
+from flair.embeddings import TransformerDocumentEmbeddings, TransformerWordEmbeddings
 from flair.models import SequenceTagger
 from torch import onnx, randn
 
 from predict import load_model
 
 
-def to_onnx(model: SequenceTagger, out_path: str):
-    dummy_input = randn(
-        100,
-        100,
-        3,
-    )
-    
-    model.eval()
+# TODO: https://github.com/flairNLP/flair/blob/master/resources/docs/TUTORIAL_13_TRANSFORMERS_PRODUCTION.md
 
-    onnx.export(
-        model,
-        dummy_input,
-        out_path,
-    )
+def to_onnx(model: SequenceTagger, out_path: str):
+
+    assert isinstance(
+        model.embeddings, (TransformerWordEmbeddings)
+    ), "Model must be transformer"
+
+    model.embeddings = model.
 
 
 def main():
-    model_path = path.join(path.dirname(__file__), "../models/lite")
+    model_path = path.join(path.dirname(__file__), "../models/transformer")
     best_model_path = path.join(model_path, "best-model.pt")
     onnx_model_path = best_model_path.replace(".pt", ".onnx")
 

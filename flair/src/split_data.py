@@ -53,7 +53,7 @@ def main():
     splits_folder = data_folder + "splits/"
 
     data = pd.read_csv(data_folder + "features.csv")
-    data = duplicate_data(data)
+    # data = duplicate_data(data)
 
     train_data, val_data, test_data = split(data, TRAIN, VAL, 1.0 - TRAIN - VAL)
 
