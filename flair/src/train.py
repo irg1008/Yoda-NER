@@ -32,7 +32,7 @@ def get_sequence_tagger(
         embeddings=embeddings,
         tag_dictionary=tag_dictionary,
         tag_type=label_type,
-        use_crf=True,
+        use_crf=False,  # https://en.wikipedia.org/wiki/Conditional_random_field
         dropout=dropout,
     )
     return tagger

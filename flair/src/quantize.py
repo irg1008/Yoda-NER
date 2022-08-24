@@ -1,10 +1,12 @@
-from torch import quantization, nn, qint8, save
 from os import path
+
+from flair.models import SequenceTagger
+from torch import nn, qint8, quantization, save
 
 from predict import load_model
 
 
-def quantize_model(model):
+def quantize_model(model: SequenceTagger):
     cpu_model = model.cpu()
     quantized_model = quantization.quantize_dynamic(
         cpu_model,
