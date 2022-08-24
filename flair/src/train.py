@@ -73,11 +73,11 @@ def train(
 def get_embeddings() -> list[TokenEmbeddings]:
     flair_forward_embedding = PooledFlairEmbeddings("es-forward")
     flair_backward_embedding = PooledFlairEmbeddings("es-backward")
-    word_embedding = WordEmbeddings("es_crawl")
+    word_embedding = WordEmbeddings("es-crawl")
 
     sm_flair_forward_embedding = FlairEmbeddings("es-forward-fast")
     sm_flair_backward_embedding = FlairEmbeddings("es-backward-fast")
-    sm_word_embedding = WordEmbeddings("es")
+    sm_word_embedding = WordEmbeddings("glove")
 
     transformer_embedding = TransformerWordEmbeddings(
         "dccuchile/bert-base-spanish-wwm-cased"
