@@ -114,7 +114,7 @@ def main(corpus: Corpus):
     train(
         tagger,
         corpus,
-        out=model_path + "glove",
+        out=model_path + "lite",
         lr=LEANRING_RATE,
         epochs=MAX_EPOCHS,
         batch_size=BATCH_SIZE,
