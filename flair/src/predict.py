@@ -19,13 +19,13 @@ def predict(model: SequenceTagger, sentence: Sentence) -> Sentence:
 
 def main(text: str):
     model_path = path.join(path.dirname(__file__), "../models/")
-    model = load_model(model_path + "semi-lite/best-model.pt")
+    model = load_model(model_path + "s/best-model.pt")
 
     sentence = get_sentence(text)
     predict(model, sentence)
 
 
 if __name__ == "__main__":
-    text = "Cremallera rojo/gris junto a 45 chaqueta S"
+    text = "ImseVimse - Bañador-pañal imsevimse con volante L naranja"
 
     main(text)

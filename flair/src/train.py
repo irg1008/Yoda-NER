@@ -71,8 +71,10 @@ def train(
 # Examples:
 #   - https://huggingface.co/mrm8488/bert-spanish-cased-finetuned-ner
 def get_embeddings() -> list[TokenEmbeddings]:
-    flair_forward_embedding = PooledFlairEmbeddings("es-forward")
-    flair_backward_embedding = PooledFlairEmbeddings("es-backward")
+    pool_flair_forward_embedding = PooledFlairEmbeddings("es-forward")
+    pool_flair_backward_embedding = PooledFlairEmbeddings("es-backward")
+    flair_forward_embedding = FlairEmbeddings("es-forward")
+    flair_backward_embedding = FlairEmbeddings("es-backward")
     word_embedding = WordEmbeddings("es-crawl")
 
     sm_flair_forward_embedding = FlairEmbeddings("es-forward-fast")
@@ -84,6 +86,8 @@ def get_embeddings() -> list[TokenEmbeddings]:
 
     return [
         # transformer_embedding,
+        # pool_flair_forward_embedding,
+        # pool_flair_backward_embedding,
         flair_forward_embedding,
         flair_backward_embedding,
         # word_embedding,
@@ -112,7 +116,7 @@ def main(corpus: Corpus):
     train(
         tagger,
         corpus,
-        out=model_path + "semi-lite",
+        out=model_path + "ner",
         lr=LEANRING_RATE,
         epochs=MAX_EPOCHS,
         batch_size=BATCH_SIZE,

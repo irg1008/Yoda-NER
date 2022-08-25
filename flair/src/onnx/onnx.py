@@ -19,7 +19,7 @@ def to_onnx(model: SequenceTagger, out_path: str):
 
 
 def main():
-    model_path = path.join(path.dirname(__file__), "../models/transformer")
+    model_path = path.join(path.dirname(__file__), "../../models/transformer")
     best_model_path = path.join(model_path, "best-model.pt")
     onnx_model_path = best_model_path.replace(".pt", ".onnx")
 

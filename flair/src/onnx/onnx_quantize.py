@@ -27,7 +27,7 @@ def quantize_onnx_model(onnx_model_path: str):
 
 
 def main():
-    model_path = path.join(path.dirname(__file__), "../models/lite")
+    model_path = path.join(path.dirname(__file__), "../../models/lite")
     best_model_path = path.join(model_path, "best-model.pt")
     onnx_model_path = best_model_path.replace(".pt", ".onnx")
 
