@@ -45,9 +45,11 @@ def clean(text: str) -> str:
 
 
 def find_match_pos(sentence: str, word: str) -> list[Pos]:
-    sentence = sentence.lower()
-    word = word.strip().lower()
-    matches: list[Pos] = [m.span() for m in re.finditer(word, sentence)]
+    word = word.strip()
+    matches: list[Pos] = [
+        m.span()
+        for m in re.finditer(r"\b" + word + r"\b", sentence, flags=re.IGNORECASE)
+    ]
     return matches
 
 
