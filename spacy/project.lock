@@ -1,39 +1,39 @@
 split:
   cmd: python -m spacy run split
   script:
-    - python scripts/split_data.py assets/products/features_size_color.csv assets/products/train.json
-      assets/products/val.json 0.8
+    - python scripts/split_data.py data/augmented.csv data/splits/train.json data/splits/val.json
+      0.8
   deps:
-    - path: assets/products/features_size_color.csv
-      md5: a6fb538f3f3ef5e28af22c513cacce90
+    - path: data/augmented.csv
+      md5: 941f4bd2801da6ba6b73e3f7bc86e37d
     - path: scripts/split_data.py
-      md5: ba684d5298b2d122d8c2d1bdb20da40f
+      md5: a8333e68703e59d9f5578d294eb5d63f
   outs:
-    - path: assets/products/train.json
-      md5: 7cbe0e3b4e2da4faf083ce1b4a0bc5a7
-    - path: assets/products/val.json
-      md5: 70f336da15c4898078dee81ebf20c5e0
-  spacy_version: 3.4.0
-  spacy_git_version: d583626a8
+    - path: data/splits/train.json
+      md5: 40b5cbe3de7bc6580e7c9f6f07293245
+    - path: data/splits/val.json
+      md5: 0ca2ef259e26c49e27c828f1da384595
+  spacy_version: 3.4.1
+  spacy_git_version: 5c2a00cef
 convert:
   cmd: python -m spacy run convert
   script:
-    - python scripts/convert.py es assets/products/train.json corpus/train.spacy
-    - python scripts/convert.py es assets/products/val.json corpus/val.spacy
+    - python scripts/convert.py es data/splits/train.json corpus/train.spacy
+    - python scripts/convert.py es data/splits/val.json corpus/val.spacy
   deps:
-    - path: assets/products/train.json
-      md5: 7cbe0e3b4e2da4faf083ce1b4a0bc5a7
-    - path: assets/products/val.json
-      md5: 70f336da15c4898078dee81ebf20c5e0
+    - path: data/splits/train.json
+      md5: 40b5cbe3de7bc6580e7c9f6f07293245
+    - path: data/splits/val.json
+      md5: 0ca2ef259e26c49e27c828f1da384595
     - path: scripts/convert.py
-      md5: 615662cc5af0c87f9317ed862a27197b
+      md5: b389f5db2c5d44cfcf294069fc2fd7ce
   outs:
     - path: corpus/train.spacy
-      md5: ca96a5fd338e5f020a6f76863adfdf27
+      md5: 478cc4d27d3f68110cafd2c4ddf676a6
     - path: corpus/val.spacy
-      md5: 1aacb5344085e1ef828e4041871e91cd
-  spacy_version: 3.4.0
-  spacy_git_version: d583626a8
+      md5: 74efb74c94e92130b6d4c3f601b19f53
+  spacy_version: 3.4.1
+  spacy_git_version: 5c2a00cef
 setup:
   cmd: python -m spacy run setup
   script:
@@ -60,20 +60,20 @@ train:
   cmd: python -m spacy run train
   script:
     - python -m spacy train configs/config.cfg --output out --paths.dev corpus/val.spacy
-      --paths.train corpus/train.spacy --training.eval_frequency 10 --training.max_steps
-      200 --training.patience 100 --gpu-id 0
+      --paths.train corpus/train.spacy --training.eval_frequency 1 --training.max_steps
+      10 --training.patience 5 --gpu-id 0
   deps:
     - path: configs/config.cfg
-      md5: f1079607b6f50bc4820605e9cc3b83ed
-    - path: assets/products/train.json
-      md5: 7cbe0e3b4e2da4faf083ce1b4a0bc5a7
-    - path: assets/products/val.json
-      md5: 70f336da15c4898078dee81ebf20c5e0
+      md5: 031f77beb1aa1d4993ce95d28793488a
+    - path: data/splits/train.json
+      md5: 40b5cbe3de7bc6580e7c9f6f07293245
+    - path: data/splits/val.json
+      md5: 0ca2ef259e26c49e27c828f1da384595
   outs:
     - path: out/model-best
-      md5: e5fe6147149caab863f1cd2635d901d6
-  spacy_version: 3.4.0
-  spacy_git_version: d583626a8
+      md5: f107d6d09afa9b63ac357a27cef8c062
+  spacy_version: 3.4.1
+  spacy_git_version: 5c2a00cef
 evaluate:
   cmd: python -m spacy run evaluate
   script:
@@ -81,14 +81,14 @@ evaluate:
       --gpu-id 0
   deps:
     - path: out/model-best
-      md5: e5fe6147149caab863f1cd2635d901d6
+      md5: b6957251988f5ba569f1c8b494b6fd61
     - path: assets/products/val.json
-      md5: 70f336da15c4898078dee81ebf20c5e0
+      md5: 8cc20f642d1d69dd6072319642aff47a
   outs:
     - path: out/metrics.json
-      md5: ef6c4c98953ffcfad880e86a4ac57b96
-  spacy_version: 3.4.0
-  spacy_git_version: d583626a8
+      md5: f8cdcc0535b654b26cb3dd2971877e40
+  spacy_version: 3.4.1
+  spacy_git_version: 5c2a00cef
 package:
   cmd: python -m spacy run package
   script:
@@ -108,12 +108,12 @@ config:
     - python -m spacy init fill-config configs/base_config.cfg configs/config.cfg
   deps:
     - path: configs/base_config.cfg
-      md5: 7e954512579608b306d9f3052e1993d7
+      md5: 7241e829136edcf204e1c1bac1b07d09
   outs:
     - path: configs/config.cfg
-      md5: f1079607b6f50bc4820605e9cc3b83ed
-  spacy_version: 3.4.0
-  spacy_git_version: d583626a8
+      md5: 031f77beb1aa1d4993ce95d28793488a
+  spacy_version: 3.4.1
+  spacy_git_version: 5c2a00cef
 train-with-vectors:
   cmd: python -m spacy run train-with-vectors
   script:

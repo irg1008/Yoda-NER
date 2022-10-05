@@ -1,6 +1,6 @@
 title: "Yoda Ner"
 description: ""
-spacy_version: "3.4.0"
+spacy_version: "3.4.1"
 
 # Variables can be referenced across the project.yml using ${vars.var_name}
 vars:
@@ -9,11 +9,11 @@ vars:
   vectors_model: "es_dep_news_trf"
 
   # Custom data
-  data: "assets/products/features_size_color.csv"
+  data: "data/augmented.csv"
 
   # JSON data
-  train: "assets/products/train.json"
-  val: "assets/products/val.json"
+  train: "data/splits/train.json"
+  val: "data/splits/val.json"
 
   # Spacy
   sp_train: "corpus/train.spacy"
@@ -28,9 +28,9 @@ vars:
 
   # Train parameters
   train_out: "out"
-  eval_freq: 10
-  epochs: 200
-  patience: 100
+  eval_freq: 1
+  epochs: 10
+  patience: 5
   model: "out/model-best"
 
   # Metrics

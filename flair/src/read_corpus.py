@@ -1,8 +1,6 @@
-from tabnanny import verbose
 from flair.data import Corpus
 from flair.datasets import ColumnCorpus
-from os import path, devnull
-import sys
+from os import path
 
 
 def get_corpus(folder: str, train_file: str, test_file: str, val_file: str) -> Corpus:

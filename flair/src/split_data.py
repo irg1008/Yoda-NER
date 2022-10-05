@@ -2,7 +2,7 @@ from typing import Callable
 import pandas as pd
 from os import path
 
-TRAIN, VAL = 0.7, 0.15
+TRAIN, VAL = 0.7, 0.30
 
 
 def split(
@@ -48,18 +48,23 @@ def duplicate_data(data: pd.DataFrame) -> pd.DataFrame:
     return pd.concat([data, data_upper, data_capitalize, data_lower])
 
 
-def main():
-    data_folder = path.join(path.dirname(__file__), "../data/")
-    splits_folder = data_folder + "splits/"
+def main(sample: int = -1):
+    data_folder = path.join(path.dirname(__file__), "../data")
+    splits_folder = path.join(data_folder, "splits")
 
-    data = pd.read_csv(data_folder + "features.csv")
+    data = pd.read_csv(
+        path.join(data_folder, "augmented/augmented_data.csv"), dtype=str
+    ).fillna("null")
     # data = duplicate_data(data)
+
+    if sample > 0:
+        data = data.sample(sample, replace=True)
 
     train_data, val_data, test_data = split(data, TRAIN, VAL, 1.0 - TRAIN - VAL)
 
-    export_csv(train_data, splits_folder + "train.csv")
-    export_csv(val_data, splits_folder + "val.csv")
-    export_csv(test_data, splits_folder + "test.csv")
+    export_csv(train_data, path.join(splits_folder, "train.csv"))
+    export_csv(val_data, path.join(splits_folder, "val.csv"))
+    export_csv(test_data, path.join(splits_folder, "test.csv"))
 
 
 if __name__ == "__main__":

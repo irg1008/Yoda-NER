@@ -7,6 +7,7 @@ import typer
 import spacy
 from spacy.tokens import DocBin, Span, Doc
 from split_types import TitlesData
+from spacy.util import filter_spans
 
 
 def get_json_data(path: Path) -> TitlesData:
@@ -36,7 +37,7 @@ def get_no_span_msg(start: int, end: int, label: str, doc: Doc, title: str) -> s
     Returns:
         str: Warning message.
     """
-    return f"Skipping entity [{start}, {end}, {label}] in the following text because the character span '{doc.text[start:end]}' does not align with token boundaries:\n\n{repr(title)}\n"
+    return f"Skipping entity [{start}, {end}, {label}] in the following text because the character span {repr(doc.text[start:end])}  does not align with token boundaries:\n\n{repr(title)}\n"
 
 
 def main(lang: str, json_path: Path, spacy_path: Path):
@@ -58,7 +59,8 @@ def main(lang: str, json_path: Path, spacy_path: Path):
         entities: list[Span] = []
 
         for start, end, label in data["entities"]:
-            span = doc.char_span(start, end, label=label)
+            span = doc.char_span(start, end, label=label,
+                                 alignment_mode="expand")
 
             if span:
                 entities.append(span)
@@ -66,7 +68,8 @@ def main(lang: str, json_path: Path, spacy_path: Path):
                 msg = get_no_span_msg(start, end, label, doc, title)
                 warnings.warn(msg)
 
-        doc.ents = tuple(entities)
+        entities = filter_spans(entities)
+        doc.set_ents(entities)
         db.add(doc)
 
     db.to_disk(spacy_path)

@@ -37,9 +37,14 @@ def clean(text: str) -> str:
         "~",
         "'",
     ]
+    double_filters = [
+        "/"
+    ]
     for i in text:
         if i in filters:
             text = text.replace(i, " " + i)
+        if i in double_filters:
+            text = text.replace(i, " " + i + " ")
 
     return text
 
@@ -48,7 +53,9 @@ def find_match_pos(sentence: str, word: str) -> list[Pos]:
     word = word.strip()
     matches: list[Pos] = [
         m.span()
-        for m in re.finditer(r"\b" + word + r"\b", sentence, flags=re.IGNORECASE)
+        for m in re.finditer(
+            r"\b" + re.escape(word) + r"\b", sentence, flags=re.IGNORECASE
+        )
     ]
     return matches
 
@@ -90,7 +97,7 @@ def get_pos_data(
 
     for feat, name in zip(features, features_name):
 
-        individual_feats = feat.split("/")
+        individual_feats = str(feat).split("/")
 
         for ind_feat in individual_feats:
             ind_feat = clean(ind_feat)
