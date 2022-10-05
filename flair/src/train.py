@@ -73,6 +73,8 @@ def train(
         weight_decay=0.0,
     )
 
+    return
+
 
 # List of embeddings: https://github.com/flairNLP/flair/blob/master/resources/docs/TUTORIAL_4_ELMO_BERT_FLAIR_EMBEDDING.md
 # Examples:
@@ -97,7 +99,6 @@ def get_embeddings() -> list[TokenEmbeddings]:
         fine_tune=True,
         subtoken_pooling="first",
         layers="-1",
-        force_max_length=True,
     )
 
     return [
@@ -127,10 +128,10 @@ def main(corpus: Corpus):
     tagger = get_sequence_tagger(stack_embedding, label_dict, LABEL_TYPE)
 
     model_path = path.join(path.dirname(__file__), "../models/")
-    out_model_path = path.join(model_path, "mix_trans_word")
+    out_model_path = path.join(model_path, "trans_sm_flair")
 
     LEANRING_RATE = 1e-5
-    MAX_EPOCHS = 3
+    MAX_EPOCHS = 2
     BATCH_SIZE = 8
 
     train(

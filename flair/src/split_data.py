@@ -2,7 +2,7 @@ from typing import Callable
 import pandas as pd
 from os import path
 
-TRAIN, VAL = 0.7, 0.30
+TRAIN, VAL = 0.6, 0.2
 
 
 def split(
