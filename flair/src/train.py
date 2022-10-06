@@ -95,7 +95,7 @@ def get_embeddings() -> list[TokenEmbeddings]:
     transformer_embedding = TransformerWordEmbeddings(
         "bert-base-multilingual-cased",
         is_document_embedding=False,
-        use_context=False,
+        use_context=True,
         fine_tune=True,
         subtoken_pooling="first",
         layers="-1",
@@ -105,19 +105,19 @@ def get_embeddings() -> list[TokenEmbeddings]:
         transformer_embedding,  # Keep transformer embedding first
         # pool_flair_forward_embedding,
         # pool_flair_backward_embedding,
-        # flair_forward_embedding,
-        # flair_backward_embedding,
-        # word_embedding,
-        sm_flair_forward_embedding,
-        sm_flair_backward_embedding,
+        flair_forward_embedding,
+        flair_backward_embedding,
+        word_embedding,
+        # sm_flair_forward_embedding,
+        # sm_flair_backward_embedding,
         # sm_word_embedding,
-        # glove_word_embedding,
+        glove_word_embedding,
     ]
 
 
 def main(corpus: Corpus):
     LABEL_TYPE: LabelType = "ner"
-    TRANSFORMER_ONLY = True
+    TRANSFORMER_ONLY = False
 
     label_dict = get_corpus_dict(corpus, LABEL_TYPE)
 
@@ -128,11 +128,11 @@ def main(corpus: Corpus):
     tagger = get_sequence_tagger(stack_embedding, label_dict, LABEL_TYPE)
 
     model_path = path.join(path.dirname(__file__), "../models/")
-    out_model_path = path.join(model_path, "trans_sm_flair")
+    out_model_path = path.join(model_path, "transformer")
 
     LEANRING_RATE = 1e-5
     MAX_EPOCHS = 2
-    BATCH_SIZE = 8
+    BATCH_SIZE = 4
 
     train(
         tagger,

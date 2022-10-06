@@ -22,7 +22,7 @@ def save_pytorch_model(flair_model: SequenceTagger, path: str):
 
 
 def main(text: str):
-    model_path = path.join(path.dirname(__file__), "../models/mix_trans_word")
+    model_path = path.join(path.dirname(__file__), "../models/s")
     model = load_model(path.join(model_path, "best-model.pt"))
 
     model.eval()
