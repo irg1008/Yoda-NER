@@ -105,9 +105,9 @@ def get_embeddings() -> list[TokenEmbeddings]:
         transformer_embedding,  # Keep transformer embedding first
         # pool_flair_forward_embedding,
         # pool_flair_backward_embedding,
-        flair_forward_embedding,
-        flair_backward_embedding,
-        word_embedding,
+        # flair_forward_embedding,
+        # flair_backward_embedding,
+        # word_embedding,
         # sm_flair_forward_embedding,
         # sm_flair_backward_embedding,
         # sm_word_embedding,

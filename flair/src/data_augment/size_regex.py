@@ -2,13 +2,14 @@ import pandas as pd
 from utils import get_data
 import re
 from tqdm import tqdm
+from os import path
 
 
 def find_units(x: str):
     # Find units and sizes:
     # examples: 125mm, 5 inches, 5kg, 5 kg, 5x6x89cm, 5x6x89 cm, 4cm x 5cm x 6cm
 
-    units = []
+    units: list[str] = []
 
     # First find units like 2x2x2cm or 2x2x2 cm or 600x8x8mm or 600x8x8 mm
     # Then find units like 2cm x 2cm x 2cm or 2 cm x 2 cm x 2 cm not in previous or 2cm X 2cm X 2cm
@@ -17,18 +18,34 @@ def find_units(x: str):
     # Accept decimal values with dot or comma
     units.extend(
         re.findall(
-            r"\b([\d\.,]+[\s]?[xX][\s]?[\d\.,]+[\s]?[xX][\s]?[\d\.,]+[\s]?[a-zA-Z]{1,2})\b",
+            r"\b([\d\.,]+[\s]?[xX][\s]?[\d\.,]+[\s]?[xX][\s]?[\d\.,]+[\s]?[a-zA-Z]{0,2})\b",
             x,
         )
     )
     units.extend(
         re.findall(
-            r"\b([\d\.,]+[\s]?[a-zA-Z]+[\s]?[xX][\s]?[\s]?[a-zA-Z]+[\s]?[xX][\s]?[\s]?[a-zA-Z]{1,2})\b",
+            r"\b([\d\.,]+[\s]?[a-zA-Z]+[\s]?[xX][\s]?[\s]?[a-zA-Z]+[\s]?[xX][\s]?[\s]?[a-zA-Z]{0,2})\b",
             x,
         )
     )
-    units.extend(re.findall(r"\b([\d\.,]+[\s]?[a-wyzA-WYZ]{1,2})\b", x))
-    units.extend(re.findall(r"\b([\d\.,]+[\s]?[\d\.,/]+)\b", x))
+    units.extend(re.findall(r"\b([\d\.,]+[\s]?[a-zA-Z]{0,2})\b", x))
+    units.extend(
+        re.findall(r"\b([\d\.,]+[\s]?[\d\.,/]+[\d\.,][\s]?[a-zA-Z]{0,2})\b", x)
+    )
+
+    # Get unis like 5x5 cm or 5cm x 5cm or 5 cm x 5 cm or 5x5cm or 5cmx5cm or 5 cmx5 cm
+    units.extend(
+        re.findall(r"\b([\d\.,]+[\s]?[a-zA-Z]+[\s]?[xX][\s]?[\s]?[a-zA-Z]{0,2})\b", x)
+    )
+
+    # Get units like 60mm/h or 70km/h ot 55w/h or 400kw/h or 65m3/s, 55km2/watt
+    units.extend(re.findall(r"\b([\d\.,]+[\s]?[a-zA-Z]+[\d\.,]?[/][a-zA-Z]+)\b", x))
+
+    # Get units like 1 mts, 1 liters, 1 litro, 2 litros. Use these units: [litros, metros, px, mpx, mts, lts] and other three letter units
+    normal_units = ["litro", "metro", "million", "millon", "watt", "velocidad"]
+    for n_unit in normal_units:
+        # Find "n_unit" followed with optional ["s", "es", "eos"]
+        units.extend(re.findall(r"\b([\d\.,]+[\s]?" + n_unit + "[s|es|eos])\b", x))
 
     # Add also sizes XS, S, M, ...
     # One or more X before S or L
@@ -80,5 +97,8 @@ def size_pass(data: pd.DataFrame):
 
 
 if __name__ == "__main__":
-    data, aug_dir = get_data()
+    # data, aug_dir = get_data()
+    data = pd.read_csv(
+        path.join(path.dirname(__file__), "../../data/augmented/augmented_data.csv")
+    )
     revised = size_pass(data)
